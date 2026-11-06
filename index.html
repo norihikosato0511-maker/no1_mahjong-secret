@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>📖 徳丸くんと麻雀牌のひみつ</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:"Yu Gothic","Meiryo",sans-serif;
+    background:#f4f7fb;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,.2);
+}
+
+header h1{
+    margin:0;
+    font-size:28px;
+}
+
+.container{
+    max-width:900px;
+    margin:10px auto;
+    padding:8px;
+}
+
+#pageImage{
+    width:100%;
+    display:block;
+    border-radius:15px 15px 0 0;
+}
+
+.book-card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+#pageImage{
+    width:100%;
+    display:block;
+}
+
+.page-info{
+    text-align:center;
+    padding:10px;
+    font-weight:bold;
+    font-size:20px;
+    color:#2563eb;
+}
+
+#pageTitle{
+    text-align:center;
+    font-size:26px;
+    padding-top:15px;
+    color:#1e3a8a;
+}
+
+#pageText{
+    padding:20px;
+    font-size:22px;
+    line-height:1.8;
+}
+
+.controls{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+
+    position:sticky;
+    bottom:0;
+    background:white;
+    padding:10px;
+    z-index:999;
+    box-shadow:0 -2px 10px rgba(0,0,0,.15);
+}
+
+@media(max-width:600px){
+
+    button{
+        width:48%;
+        padding:16px;
+        font-size:18px;
+    }
+
+}
+
+button{
+    border:none;
+    border-radius:12px;
+    padding:12px 20px;
+    font-size:16px;
+    cursor:pointer;
+    touch-action:manipulation;
+
+    flex:1 1 45%;
+}
+
+.prev{
+    background:#e5e7eb;
+}
+
+.next{
+    background:#10b981;
+    color:white;
+}
+
+.read{
+    background:#2563eb;
+    color:white;
+}
+
+.stop{
+    background:#ef4444;
+    color:white;
+}
+
+.auto{
+    background:#9333ea;
+    color:white;
+}
+
+.home{
+    background:#f59e0b;
+    color:white;
+}
+
+/* 次回予告ボタン */
+#nextStoryBtn{
+    font-size:20px;
+    font-weight:bold;
+    animation:pulse 2s infinite;
+    background:#f97316;
+    color:white;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+/* ふんわり強調 */
+@keyframes pulse{
+
+    0%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.05);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
+}
+
+footer{
+    text-align:center;
+    padding:15px;
+    color:#666;
+}
+
+@media(max-width:600px){
+
+    #pageTitle{
+        font-size:26px;
+    }
+
+    #pageText{
+        font-size:20px;
+        line-height:1.8;
+        padding:15px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>📖 徳丸くんと麻雀牌のひみつ</h1>
+</header>
+
+<div class="container">
+
+<div class="book-card">
+
+<img id="pageImage" src="images/page1.jpg">
+
+<div id="pageNumber" class="page-info">
+1 / 10
+</div>
+
+<h2 id="pageTitle">
+プロローグ
+</h2>
+
+<div id="pageText">
+ある日、数字が大好きな徳丸くんは、不思議な光を放つ麻雀牌を見つけました。
+</div>
+
+<div class="controls">
+
+<button class="home" onclick="goHome()">🏠 表紙</button>
+
+<button class="prev" onclick="prevPage()">⬅️ 前へ</button>
+
+<button class="read" onclick="readPage()">🔊 読み上げ</button>
+
+<button class="stop" onclick="stopRead()">⏹️ 停止</button>
+
+<button class="next" onclick="nextPage()">➡️ 次へ</button>
+
+<button class="auto" onclick="toggleAuto()">▶️ 自動再生</button>
+
+<button id="nextStoryBtn"
+        class="next"
+        style="display:none;"
+        onclick="openNextStory()">
+🀄 つぎは 徳丸くんとやくのもり！
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<footer>
+徳丸くんシリーズ © Marunori Books
+</footer>
+
+<script>
+
+const pages = [
+
+{
+title:"はじめまして！とくまるくんです！",
+image:"images/page1.jpg",
+text:"ぼくの なまえは とくまるくん。しらべたり、かんがえたりするのが だいすきな おとこのこです。これから まほうのでんたくと まーじゃんはいの なかまたちとの たのしいぼうけんが はじまります。"
+},
+
+{
+title:"とくまるくんと まほうのでんたく",
+image:"images/page2.jpg",
+text:"あるひ、とくまるくんは ふしぎな でんたくを ひろいました。すると まわりが キラキラと ひかりだして、なにかが おこりそうです。"
+},
+
+{
+title:"ふしぎな まーじゃんはいに であったよ！",
+image:"images/page3.jpg",
+text:"おさんぽをしていると、くさむらの むこうから『こんにちはー！』という こえが きこえてきました。そこには しゃべる まーじゃんはいの なかまたちが ならんでいました。"
+},
+
+{
+title:"とう・なん・しゃー・ぺーの ひみつ",
+image:"images/page4.jpg",
+text:"ひがしの あさひ、みなみの たいよう、にしの ゆうやけ、きたの よぞら。とうくんたちは それぞれの せかいを とくまるくんに おしえてくれました。"
+},
+
+{
+title:"みんな ともだち！",
+image:"images/page5.jpg",
+text:"とくまるくんは まーじゃんはいの なかまたちと すっかり なかよしになりました。みんなで あそんだり、おはなししたりして たのしいじかんを すごしました。"
+},
+
+{
+title:"みんなで かぞえてみよう！",
+image:"images/page6.jpg",
+text:"とうくん、なんちゃん、しゃーくん、ぺーくん。みんなで かぞえると たくさんの かずが みえてきます。とくまるくんは かぞえることが もっと すきになりました。"
+},
+
+{
+title:"あわせると いくつかな？",
+image:"images/page7.jpg",
+text:"ひとつと ひとつを あわせると ふたつ。みんなで いっしょに かぞえると、かずの ひみつが わかってきました。"
+},
+
+{
+title:"こんどは ５に ちょうせん！",
+image:"images/page8.jpg",
+text:"なかまたちで ちからを あわせて ５を つくりました。かずは ひとりではなく、みんなで たのしむものなんだね。"
+},
+
+{
+title:"みんなの ちからを あわせよう！",
+image:"images/page9.jpg",
+text:"あるひ、にじの はしが とぎれてしまいました。とくまるくんと なかまたちは ちからを あわせて、にじを つなげることに しました。"
+},
+
+{
+  title:"ありがとう！まーじゃんはいの なかまたち",
+  image:"images/page10.jpg",
+  text:"とくまるくんは たくさんの なかまと であい、たくさんのことを まなびました。みんなで『また あおうね！』と やくそくすると、とおくに ふしぎな さんつの くに が みえました。つぎは どんな なかまに あえるのかな？"
+}
+
+];
+
+let currentPage = 0;
+let autoMode = false;
+let endingShown = false;
+
+const pageImage = document.getElementById("pageImage");
+const pageTitle = document.getElementById("pageTitle");
+const pageText = document.getElementById("pageText");
+const pageNumber = document.getElementById("pageNumber");
+
+function nextPage(){
+
+    if(currentPage < pages.length - 1){
+        currentPage++;
+        showPage(currentPage);
+        readPage();
+    }
+
+}
+
+function prevPage(){
+
+    if(currentPage > 0){
+        currentPage--;
+        showPage(currentPage);
+        readPage();
+    }
+
+}
+
+function goHome(){
+
+    endingShown = false;
+
+    currentPage = 0;
+    showPage(currentPage);
+    readPage();
+
+}
+
+function readPage(){
+
+    speechSynthesis.cancel();
+
+    const speech =
+        new SpeechSynthesisUtterance(
+            pages[currentPage].text
+        );
+
+    speech.lang = "ja-JP";
+    speech.rate = 0.9;
+    speech.pitch = 1.0;
+
+    speech.onend = function(){
+
+        if(autoMode){
+
+            if(currentPage < pages.length - 1){
+
+                currentPage++;
+                showPage(currentPage);
+                readPage();
+
+            }else{
+
+                autoMode = false;
+
+                document.querySelector(".auto")
+                    .textContent = "▶️ 自動再生";
+
+            }
+
+        }
+
+    };
+
+
+    speechSynthesis.speak(speech);
+
+}
+
+function stopRead(){
+
+    speechSynthesis.cancel();
+
+}
+
+function toggleAuto(){
+
+    const button =
+        document.querySelector(".auto");
+
+    if(!autoMode){
+
+        autoMode = true;
+        button.textContent =
+            "⏸️ 自動停止";
+
+        readPage();
+
+    }else{
+
+        autoMode = false;
+        button.textContent =
+            "▶️ 自動再生";
+
+        speechSynthesis.cancel();
+
+    }
+
+}
+
+document.addEventListener("keydown",(e)=>{
+
+    if(e.key === "ArrowRight"){
+        nextPage();
+    }
+
+    if(e.key === "ArrowLeft"){
+        prevPage();
+    }
+
+});
+
+showPage(currentPage);
+
+function showPage(index){
+
+    pageImage.src = pages[index].image;
+    pageTitle.textContent = pages[index].title;
+    pageText.textContent = pages[index].text;
+
+    pageNumber.textContent =
+        (index + 1) + " / " + pages.length;
+
+    const nextStoryBtn =
+        document.getElementById("nextStoryBtn");
+
+    if(index === pages.length - 1){
+
+        pageNumber.style.display = "none";
+        pageTitle.style.display = "none";
+        pageText.style.display = "none";
+
+        nextStoryBtn.style.display = "block";
+
+        if(!endingShown){
+
+            endingShown = true;
+
+            setTimeout(()=>{
+                alert(
+                  "おしまい\n\n" +
+                  "🌈 ありがとう！\n\n" +
+                  "つぎは\n" +
+                  "『徳丸くんとやくのもり』"
+                );
+            },500);
+
+        }
+
+    }else{
+
+        pageNumber.style.display = "block";
+        pageTitle.style.display = "block";
+        pageText.style.display = "block";
+
+        nextStoryBtn.style.display = "none";
+    }
+
+    window.scrollTo({
+        top:0,
+        left:0,
+        behavior:"smooth"
+    });
+}
+
+function openNextStory(){
+
+    alert(
+      "📖 第二巻\n\n" +
+      "『徳丸くんとやくのもり』\n\n" +
+      "制作中です！"
+    );
+
+}
+
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("./service-worker.js")
+    .then(() => {
+      console.log("Service Worker 登録完了");
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+</script>
+
+</body>
+</html>
